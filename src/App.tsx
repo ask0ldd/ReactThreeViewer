@@ -3,7 +3,6 @@ import './App.css'
 import { Suspense, useEffect, useState, type Dispatch, type SetStateAction } from 'react'
 import { HighSuzanne } from './components/3d/HighSuzanne'
 import { Environment, OrbitControls } from '@react-three/drei'
-import './assets/center.svg'
 
 function App() {
 
