@@ -23,8 +23,8 @@ function App() {
       <div style={{display:'flex', flexDirection:'column', width: '100%', height:'100vh', position :'relative', justifyContent:'center', alignItems :'center'}}>
         <Canvas
             shadows
-            camera={{ position: [0, 2, 10], fov: 50 }}
-            style={{display:'flex', width: '1000px', borderRadius:'12px', height:'90%', border:'1px solid #ffffff11', boxShadow:'0 4px 8px #00000033, 0 8px 16px #00000025', background:'#66666633'}}
+            camera={{ position: [0, 1, 7], fov: 50 }}
+            style={{display:'flex', width: '1000px', borderRadius:'12px', height:'90%', border:'1px solid #45454aaa', boxShadow:'0 4px 8px #00000033, 0 8px 16px #00000025'}}
         >
           <color attach="background" args={['#15151a']} />
           <directionalLight
@@ -48,9 +48,9 @@ function App() {
                   position={[0, -1, 0]}
               >
                   <planeGeometry args={[10, 10]} />
-                  <shadowMaterial opacity={0.3} />
+                  <shadowMaterial opacity={0.5}/>
               </mesh>
-              <Environment preset="city" />
+              <Environment preset="city" resolution={512} />
               <CameraController onReset={resetTrigger} setResetTrigger={setResetTrigger}/>
           </Suspense>
           <OrbitControls enableZoom={true} zoomSpeed={2} />
@@ -90,7 +90,7 @@ function CameraController({ onReset, setResetTrigger } : { onReset : boolean, se
 
   useEffect(() => {
     if (onReset) {
-      camera.position.set(0, 0, 10)
+      camera.position.set(0, 1, 7)
       camera.lookAt(0, 0, 0)
       setResetTrigger(false)
     }
