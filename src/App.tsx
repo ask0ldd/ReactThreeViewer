@@ -3,6 +3,7 @@ import './App.css'
 import { Suspense, useEffect, useState, type Dispatch, type SetStateAction } from 'react'
 import { HighSuzanne } from './components/3d/HighSuzanne'
 import { Environment, OrbitControls } from '@react-three/drei'
+import { Env } from './components/3d/Env'
 
 function App() {
 
@@ -23,9 +24,9 @@ function App() {
         <Canvas
             shadows
             camera={{ position: [0, 1, 7], fov: 50 }}
-            style={{display:'flex', width: '1000px', borderRadius:'12px', height:'90%', border:'1px solid #45454aaa', boxShadow:'0 4px 8px #00000033, 0 8px 16px #00000025'}}
+            style={{display:'flex', width: '1000px', borderRadius:'12px', height:'90%', border:'1px solid #45454aff', boxShadow:'0 4px 8px #00000033, 0 8px 16px #00000025', background: 'linear-gradient(180deg,rgb(87, 87, 87), #15151a)'}}
         >
-          <color attach="background" args={['#15151a']} />
+          {/*<color attach="background" args={['#15151a']} />*/}
           <directionalLight
               position={[5, 10, 15]}
               intensity={Math.PI * 2}
@@ -41,6 +42,7 @@ function App() {
           />
           <Suspense fallback={null}>
               <HighSuzanne suzanneRotation={suzanneRotation} />
+              <Env/>
               <mesh
                   receiveShadow
                   rotation={[-Math.PI / 2, 0, 0]}
@@ -71,7 +73,7 @@ function App() {
               </g>
             </svg>
           </button>
-          <button onClick={handleSwitchRotation} title='rotate'>
+          <button onClick={handleSwitchRotation} style={suzanneRotation ? {border:'2px solid #ffffff99'} : {}} title='rotate'>
             <svg fill="#ffffffbb" width="28px" height="28px" style={{transform:'translateY(1px)'}} viewBox="0 0 24 24">
               <path d="M12,6C6.3,6,2,8.15,2,11c0,2.45,3.19,4.38,7.71,4.88l-.42.41a1,1,0,0,0,0,1.42,1,1,0,0,0,1.42,0l2-2a1,1,0,0,0,.21-.33,1,1,0,0,0,0-.76,1,1,0,0,0-.21-.33l-2-2a1,1,0,0,0-1.42,1.42l.12.11C6,13.34,4,12,4,11c0-1.22,3.12-3,8-3s8,1.78,8,3c0,.83-1.45,2-4.21,2.6A1,1,0,0,0,15,14.79a1,1,0,0,0,1.19.77C19.84,14.76,22,13.06,22,11,22,8.15,17.7,6,12,6Z"/>
             </svg>
