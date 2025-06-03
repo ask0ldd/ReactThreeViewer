@@ -3,6 +3,7 @@ import { useFrame } from "@react-three/fiber"
 import { useEffect, useRef } from "react"
 import { Mesh } from "three"
 import { useTexture } from "@react-three/drei"
+import useCopyUVToUV2 from "../../hooks/useCopyUvToUv2"
 
 
 type GLTFResult = {
@@ -48,14 +49,7 @@ export function HighSuzanne({rotation, ao} : {rotation : boolean, ao : boolean})
   }, [scene, newTexture]);
   */
 
-  useEffect(() => {
-    if (nodes.Suzanne.geometry && !nodes.Suzanne.geometry.attributes.uv2) {
-      nodes.Suzanne.geometry.setAttribute(
-        'uv2',
-        nodes.Suzanne.geometry.attributes.uv
-      )
-    }
-  }, [nodes.Suzanne.geometry])
+  useCopyUVToUV2(nodes.Suzanne)
 
   return (
     <group dispose={null}>
@@ -65,8 +59,8 @@ export function HighSuzanne({rotation, ao} : {rotation : boolean, ao : boolean})
         receiveShadow
         geometry={nodes.Suzanne.geometry}
         material={nodes.Suzanne.material}
-        position={[0, 0.5, 0]}
-        scale={1.5}
+        position={[0, -0.12, 0]}
+        scale={1}
       >
         <meshStandardMaterial
           metalness={1}
