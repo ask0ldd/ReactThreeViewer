@@ -3,7 +3,7 @@ import { useFrame } from "@react-three/fiber"
 import { useEffect, useRef } from "react"
 import { Mesh } from "three"
 import { useTexture } from "@react-three/drei"
-import useCopyUVToUV2 from "../../hooks/useCopyUvToUv2"
+import useCopyUVToUV2 from "../../hooks/useCopyUVToUV2"
 
 
 type GLTFResult = {
