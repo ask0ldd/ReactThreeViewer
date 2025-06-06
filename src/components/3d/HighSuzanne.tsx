@@ -1,7 +1,8 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { useGLTF } from "@react-three/drei"
-import { useFrame } from "@react-three/fiber"
-import { useEffect, useRef } from "react"
-import { Mesh } from "three"
+import { useFrame, useThree } from "@react-three/fiber"
+import { useEffect, useRef, useState } from "react"
+import { Mesh, Vector3 } from "three"
 import { useTexture } from "@react-three/drei"
 import useCopyUVToUV2 from "../../hooks/useCopyUVToUV2"
 
@@ -17,10 +18,17 @@ type GLTFResult = {
 
 
 export function HighSuzanne({rotation, ao} : {rotation : boolean, ao : boolean}) {
-  const { nodes } = useGLTF('highsuz2.glb') as unknown as GLTFResult
 
+  const [active, setActive] = useState<boolean>(false)
+  const [turned, setTurned] = useState<boolean>(false)
+  // const [mousePosition, setMousePosition] = useState<{x : number, y : number }>({ x: 0, y: 0 })
+
+  const { nodes } = useGLTF('highsuz2.glb') as unknown as GLTFResult
   const meshRef = useRef<Mesh>(null)
   // const newTexture = useTexture(textureUrl);
+  
+  const { camera, size } = useThree()
+  const mouse = useRef([0, 0])
 
   const aoMap = useTexture("ao.png")
   aoMap.flipY = false
@@ -33,8 +41,35 @@ export function HighSuzanne({rotation, ao} : {rotation : boolean, ao : boolean})
   })
 
   useEffect(() => {
-    if(!rotation && meshRef.current) meshRef.current.rotation.y = 0
+    if(meshRef.current) {
+      setTurned(false)
+      setActive(false)
+      meshRef.current.rotation.y = 0
+      meshRef.current.rotation.x = 0
+      meshRef.current.rotation.z = 0
+    }
   }, [rotation])
+
+  /*useEffect(() => {
+    if(!active && meshRef.current) {
+      meshRef.current.rotation.y = 0
+      meshRef.current.rotation.x = 0
+      meshRef.current.rotation.z = 0
+    }
+  }, [active])*/
+
+  // Listen to mouse movement
+  useFrame(({ mouse: pointer }) => {
+    // pointer.x and pointer.y are normalized (-1 to 1)
+    // Project to a plane at z=0
+    const vector = new Vector3(pointer.x*100, pointer.y*100, 0)
+    vector.unproject(camera)
+    if(meshRef.current && active) {
+      meshRef.current.lookAt(vector)
+      meshRef.current.rotation.y = meshRef.current.rotation.y + Math.PI * (+turned)
+      // console.log(meshRef.current.rotation.x, meshRef.current.rotation.y)
+    }
+  })
 
   /*
   React.useEffect(() => {
@@ -59,8 +94,10 @@ export function HighSuzanne({rotation, ao} : {rotation : boolean, ao : boolean})
         receiveShadow
         geometry={nodes.Suzanne.geometry}
         material={nodes.Suzanne.material}
-        position={[0, -0.12, 0]}
+        position={[0, -0.075, 0]}
         scale={1}
+        onClick={() => setActive(prev => !prev)}
+        onDoubleClick={() => setTurned(prev => !prev)}
       >
         <meshStandardMaterial
           metalness={1}
