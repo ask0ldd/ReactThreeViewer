@@ -2,11 +2,14 @@ import { Canvas, useThree } from '@react-three/fiber'
 import './App.css'
 import { Suspense, useEffect, useState, type Dispatch, type SetStateAction } from 'react'
 import { HighSuzanne } from './components/3d/HighSuzanne'
-import { Environment, OrbitControls } from '@react-three/drei'
-import { Podium } from './components/3d/Podium'
+import { Environment } from '@react-three/drei'
 import { ACESFilmicToneMapping } from 'three'
 import { PillarsC } from './components/3d/PillarsC'
 import FloorC from './components/3d/FloorC'
+import WallC from './components/3d/WallC'
+import LogoC from './components/3d/LogoC'
+import { PodiumC } from './components/3d/PodiumC'
+import { PodiumShadowReceiver } from './components/3d/PodiumShadowReceiver'
 
 function Scenery2() {
 
@@ -31,12 +34,9 @@ function Scenery2() {
       <div style={{display:'flex', flexDirection:'column', width: '100%', height:'100vh', position :'relative', justifyContent:'center', alignItems :'center'}}>
         <Canvas
             shadows
-            camera={{ position: [0, 0.25, 4.5], fov: 50 }}
-            style={{display:'flex', width: '1000px', borderRadius:'12px', height:'90%', border:'1px solid #45454aff', boxShadow:'0 4px 8px #00000033, 0 8px 16px #00000025', background: 'linear-gradient(180deg,rgb(87, 87, 87), #15151a)'}}
-            onCreated={({ gl }) => {
-              gl.toneMapping = ACESFilmicToneMapping // or THREE.ReinhardToneMapping
-              gl.toneMappingExposure = 1.0
-            }}
+            gl={{ antialias: true, toneMapping : ACESFilmicToneMapping, toneMappingExposure : 1.5 }}
+            camera={{ position: [0, 0.25, 6.35], fov: 50 }}
+            style={{display:'flex', width: '450px', borderRadius:'12px', height:'90%', border:'1px solid #45454aff', boxShadow:'0 4px 8px #00000033, 0 8px 16px #00000025', background: 'linear-gradient(180deg,rgb(87, 87, 87), #15151a)'}}
         >
           {/*<color attach="background" args={['#15151a']} />*/}
           <directionalLight
@@ -54,9 +54,12 @@ function Scenery2() {
           />
           <Suspense fallback={null}>
               <HighSuzanne rotation={suzanneRotation} ao={suzanneAO}/>
-              <Podium/>
+              <PodiumShadowReceiver/>
+              <PodiumC/>
               <PillarsC/>
               <FloorC/>
+              <WallC/>
+              <LogoC/>
               {/*<Env/>*/}
               {/*<mesh
                   receiveShadow
@@ -77,7 +80,6 @@ function Scenery2() {
               </EffectComposer>*/}
               <CameraController onReset={resetTrigger} setResetTrigger={setResetTrigger}/>
           </Suspense>
-          <OrbitControls enableZoom={true} zoomSpeed={2} />
         </Canvas>
         <div style={{display:'flex', flexDirection:'column', rowGap:'15px', width:'44px', position:'absolute', bottom:'100px', right:'20px'}}>
           <button onClick={handleReset} title="center">
@@ -117,7 +119,7 @@ function CameraController({ onReset, setResetTrigger } : { onReset : boolean, se
 
   useEffect(() => {
     if (onReset) {
-      camera.position.set(0, 0.25, 4.5/*0, 1, 7*/)
+      camera.position.set(0, 0.25, 6.35/*0, 1, 7*/)
       // ! should fix : reset when right mouse is used
       camera.lookAt(0, 0, 0)
       setResetTrigger(false)
