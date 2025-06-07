@@ -55,19 +55,18 @@ export function HighSuzanne({rotation, ao} : {rotation : boolean, ao : boolean})
       meshRef.current.rotation.y = 0
       meshRef.current.rotation.x = 0
       meshRef.current.rotation.z = 0
+      // setTurned(false)
     }
   }, [active])*/
 
-  // Listen to mouse movement
   useFrame(({ mouse: pointer }) => {
     // pointer.x and pointer.y are normalized (-1 to 1)
-    // Project to a plane at z=0
+    // Project to the z0 plane
     const vector = new Vector3(pointer.x*100, pointer.y*100, 0)
     vector.unproject(camera)
     if(meshRef.current && active) {
       meshRef.current.lookAt(vector)
-      meshRef.current.rotation.y = meshRef.current.rotation.y + Math.PI * (+turned)
-      // console.log(meshRef.current.rotation.x, meshRef.current.rotation.y)
+      meshRef.current.rotation.y = meshRef.current.rotation.y + Math.PI * (+turned) // 180deg rotation if turned == true
     }
   })
 
