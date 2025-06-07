@@ -1,8 +1,9 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { Canvas, useThree } from '@react-three/fiber'
 import './App.css'
 import { Suspense, useEffect, useState, type Dispatch, type SetStateAction } from 'react'
 import { HighSuzanne } from './components/3d/HighSuzanne'
-import { Environment } from '@react-three/drei'
+import { Center, Environment, OrbitControls, Text3D } from '@react-three/drei'
 import { ACESFilmicToneMapping } from 'three'
 import { PillarsC } from './components/3d/PillarsC'
 import FloorC from './components/3d/FloorC'
@@ -10,6 +11,10 @@ import WallC from './components/3d/WallC'
 import LogoC from './components/3d/LogoC'
 import { PodiumC } from './components/3d/PodiumC'
 import { PodiumShadowReceiver } from './components/3d/PodiumShadowReceiver'
+import { Plant } from './components/3d/Plant'
+import { Plant2 } from './components/3d/Plant2'
+import { Plant3 } from './components/3d/Plant3'
+import { DepthOfField, EffectComposer, Vignette } from '@react-three/postprocessing'
 
 function Scenery2() {
 
@@ -35,24 +40,49 @@ function Scenery2() {
         <Canvas
             shadows
             gl={{ antialias: true, toneMapping : ACESFilmicToneMapping, toneMappingExposure : 1.5 }}
-            camera={{ position: [0, 0.25, 6.35], fov: 50 }}
+            camera={{ position: [0, 0.25, 6.35 /*+ 2.5*/], fov: 45 }}
             style={{display:'flex', width: '450px', borderRadius:'12px', height:'90%', border:'1px solid #45454aff', boxShadow:'0 4px 8px #00000033, 0 8px 16px #00000025', background: 'linear-gradient(180deg,rgb(87, 87, 87), #15151a)'}}
         >
           {/*<color attach="background" args={['#15151a']} />*/}
           <directionalLight
               position={[5, 10, 15]}
-              intensity={Math.PI}
+              intensity={Math.PI / 2}
               castShadow
           />
           <directionalLight
               position={[-10, 10, 15]}
-              intensity={Math.PI}
+              intensity={Math.PI / 2}
           />
           <directionalLight
-              position={[10, 10, 15]}
-              intensity={Math.PI}
+              position={[20, 10, 15]}
+              intensity={Math.PI / 2}
           />
-          <Suspense fallback={null}>
+          <Suspense fallback={
+            <Center>
+              <Text3D font="helvetiker_regular.typeface.json" position={[0, 0, 0]} scale={0.12}>
+                Loading...
+                <meshStandardMaterial
+                  metalness={1}
+                  roughness={0.3}
+                  color="silver"
+                />
+              </Text3D>
+              <directionalLight
+                  position={[5, 10, 15]}
+                  intensity={Math.PI}
+                  castShadow={true}
+              />
+              <directionalLight
+                  position={[-10, 10, 15]}
+                  intensity={Math.PI / 2.5}
+              />
+              <directionalLight
+                  position={[10, 10, 15]}
+                  intensity={Math.PI / 2}
+              />
+              <Environment preset="city" resolution={512} environmentRotation={[0, Math.PI / 8, 0]}/>
+            </Center>
+          }>
               <HighSuzanne rotation={suzanneRotation} ao={suzanneAO}/>
               <PodiumShadowReceiver/>
               <PodiumC/>
@@ -60,24 +90,27 @@ function Scenery2() {
               <FloorC/>
               <WallC/>
               <LogoC/>
-              {/*<Env/>*/}
-              {/*<mesh
-                  receiveShadow
-                  rotation={[-Math.PI / 2, 0, 0]}
-                  position={[0, -1, 0]}
-              >
-                  <planeGeometry args={[10, 10]} />
-                  <shadowMaterial opacity={0.5}/>
-              </mesh>*/}
+              <Plant position={[-1.25 - 0.5, 0.75 - 0.25, -3 + 4]}/>
+              <Plant position={[1.85 - 0.5, 0.8 - 0.25, -1.0 + 4 ]} rotation={[0, Math.PI, -0.05]}/> {/* 1.75 - 0.5, 0.6 - 0.25, -0.75 + 4 */}
+              {/* <Plant position={[1.75 + 0.2 - 0.5, 1.1 - 0.35, -2 + 5 + 0.5 ]} rotation={[-0.1, Math.PI, -0.1]}/> */}
+              <Plant2 position={[0, -1, 0 ]}/>
+              <Plant3 position={[0, -1, 0 ]}/>
+              <fog attach="fog" args={["#444449", 2, 35]} />
               <Environment preset="city" resolution={512} environmentIntensity={0.5} environmentRotation={[0, Math.PI / 8, 0]}/>
-              {/*<EffectComposer>
+              <EffectComposer>
                 <DepthOfField
-                  focusDistance={0.005}
-                  focalLength={0.02}
+                  focusDistance={0.006}
+                  focalLength={0.0025}
                   bokehScale={2}
                   height={480}
                 />
-              </EffectComposer>*/}
+                <Vignette
+                  offset={0.5}        // Adjusts the spread of the vignette
+                  darkness={0.2}      // Adjusts the darkness of the vignette
+                  eskil={false}       // Set to true for Eskil's vignette technique
+                />
+              </EffectComposer>
+              <OrbitControls enableZoom={true} enableRotate={false} enablePan={false} zoomSpeed={2} maxDistance={6.35} minDistance={4} />
               <CameraController onReset={resetTrigger} setResetTrigger={setResetTrigger}/>
           </Suspense>
         </Canvas>
