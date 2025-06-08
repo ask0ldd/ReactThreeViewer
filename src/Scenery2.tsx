@@ -36,12 +36,12 @@ function Scenery2() {
   
   return (
     <>
-      <div style={{display:'flex', flexDirection:'column', width: '100%', height:'100vh', position :'relative', justifyContent:'center', alignItems :'center'}}>
+      <div style={{display:'flex', flexDirection:'column', height:'90vh', position :'relative', justifyContent:'center', alignItems :'center'}}>
         <Canvas
             shadows
             gl={{ antialias: true, toneMapping : ACESFilmicToneMapping, toneMappingExposure : 1.5 }}
             camera={{ position: [0, 0.25, 6.35 /*+ 2.5*/], fov: 45 }}
-            style={{display:'flex', width: '450px', borderRadius:'12px', height:'90%', border:'1px solid #45454aff', boxShadow:'0 4px 8px #00000033, 0 8px 16px #00000025', background: 'linear-gradient(180deg,rgb(87, 87, 87), #15151a)'}}
+            style={{display:'flex', width:'100%', aspectRatio: '450/780', borderRadius:'12px', height:'100%', border:'1px solid #45454aff', boxShadow:'0 4px 8px #00000033, 0 8px 16px #00000025', background: 'linear-gradient(180deg,rgb(87, 87, 87), #15151a)'}}
         >
           {/*<color attach="background" args={['#15151a']} />*/}
           <directionalLight
@@ -101,7 +101,7 @@ function Scenery2() {
                 <DepthOfField
                   focusDistance={0.006}
                   focalLength={0.0025}
-                  bokehScale={2}
+                  bokehScale={1.5}
                   height={480}
                 />
                 <Vignette
@@ -110,11 +110,11 @@ function Scenery2() {
                   eskil={false}       // Set to true for Eskil's vignette technique
                 />
               </EffectComposer>
-              <OrbitControls enableZoom={true} enableRotate={false} enablePan={false} zoomSpeed={2} maxDistance={6.35} minDistance={4} />
+              <OrbitControls enableZoom={true} zoomSpeed={2} enableRotate={false} enablePan={false} maxDistance={6.35} minDistance={4} /> {/* enableRotate={false} enablePan={false} maxDistance={6.35} minDistance={4} */ }
               <CameraController onReset={resetTrigger} setResetTrigger={setResetTrigger}/>
           </Suspense>
         </Canvas>
-        <div style={{display:'flex', flexDirection:'column', rowGap:'15px', width:'44px', position:'absolute', bottom:'100px', right:'20px'}}>
+        <div style={{display:'flex', flexDirection:'column', rowGap:'15px', width:'44px', position:'absolute', bottom:'50px', right:'20px'}}>
           <button onClick={handleReset} title="center">
             <svg fill="#ffffffbb" height="24px" width="24px" version="1.1" viewBox="0 0 492.589 492.589">
               <g>
