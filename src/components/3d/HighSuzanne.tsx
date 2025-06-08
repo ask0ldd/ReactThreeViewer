@@ -104,7 +104,7 @@ export function HighSuzanne({rotation, ao} : {rotation : boolean, ao : boolean})
           color="silver"
           aoMap={aoMap}
           aoMapIntensity={+ao / 1.5}
-        />
+        /> {/*#F7E184*/}
       </mesh>
     </group>
   )
