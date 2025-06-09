@@ -1,10 +1,10 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { Canvas, useThree } from '@react-three/fiber'
 import './App.css'
-import { Suspense, useEffect, useState, type Dispatch, type SetStateAction } from 'react'
+import { Suspense, useEffect, useRef, useState, type Dispatch, type SetStateAction } from 'react'
 import { HighSuzanne } from './components/3d/HighSuzanne'
-import { Center, Environment, OrbitControls, Text3D } from '@react-three/drei'
-import { ACESFilmicToneMapping } from 'three'
+import { Center, Environment, OrbitControls, PerspectiveCamera, Text3D } from '@react-three/drei'
+import { ACESFilmicToneMapping, PerspectiveCamera as Camera, Vector3 } from 'three'
 import { PillarsC } from './components/3d/PillarsC'
 import FloorC from './components/3d/FloorC'
 import WallC from './components/3d/WallC'
@@ -15,12 +15,15 @@ import { Plant } from './components/3d/Plant'
 import { Plant2 } from './components/3d/Plant2'
 import { Plant3 } from './components/3d/Plant3'
 import { DepthOfField, EffectComposer, Vignette } from '@react-three/postprocessing'
+import SuzanneReflector from './components/3d/SuzanneReflector'
 
 function Scenery2() {
 
   const [resetTrigger, setResetTrigger] = useState(false)
   const [suzanneRotation, setSuzanneRotation] = useState(false)
   const [suzanneAO, setSuzanneAO] = useState(true)
+  const [cameraDistanceFromOrigin, setCameraDistanceFromOrigin] = useState(0)
+  const cameraRef = useRef<Camera>(null)
 
   function handleReset() {
     setResetTrigger(prev => !prev)
@@ -44,6 +47,12 @@ function Scenery2() {
             style={{display:'flex', width:'100%', aspectRatio: '450/780', borderRadius:'12px', height:'100%', border:'1px solid #45454aff', boxShadow:'0 4px 8px #00000033, 0 8px 16px #00000025', background: 'linear-gradient(180deg,rgb(87, 87, 87), #15151a)'}}
         >
           {/*<color attach="background" args={['#15151a']} />*/}
+          {/*<PerspectiveCamera
+            ref={cameraRef}
+            position={[0, 0.25, 6.35]}
+            fov={45}
+            makeDefault
+          />*/}
           <directionalLight
               position={[5, 10, 15]}
               intensity={Math.PI / 2}
@@ -96,6 +105,7 @@ function Scenery2() {
               <Plant2 position={[0, -1, 0 ]}/>
               <Plant3 position={[0, -1, 0 ]}/>
               <fog attach="fog" args={["#444449", 2, 35]} />
+              {<SuzanneReflector/>}
               <Environment preset="city" resolution={512} environmentIntensity={0.5} environmentRotation={[0, Math.PI / 8, 0]}/>
               <EffectComposer>
                 <DepthOfField
@@ -110,7 +120,13 @@ function Scenery2() {
                   eskil={false}       // Set to true for Eskil's vignette technique
                 />
               </EffectComposer>
-              <OrbitControls enableZoom={true} zoomSpeed={2} enableRotate={false} enablePan={false} maxDistance={6.35} minDistance={4} /> {/* enableRotate={false} enablePan={false} maxDistance={6.35} minDistance={4} */ }
+              <OrbitControls
+                onChange={() => {
+                  const distance = cameraRef.current?.position.distanceTo(new Vector3(0,0,0)) ?? 0
+                  console.log(distance)
+                  setCameraDistanceFromOrigin(distance)
+                }}
+                enableZoom={true} zoomSpeed={2} enableRotate={false} enablePan={false} maxDistance={6.35} minDistance={4} /> {/* enableRotate={false} enablePan={false} maxDistance={6.35} minDistance={4} */ }
               <CameraController onReset={resetTrigger} setResetTrigger={setResetTrigger}/>
           </Suspense>
         </Canvas>
